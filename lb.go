@@ -16,43 +16,53 @@ type LBNode struct {
 }
 
 type LB interface {
-	Can(value string) bool
-	Load([]string)
+	Can(key string) bool
+	Load(value []string)
 }
 
-func StartRedisRegistry(name string, prefix string, nodeStr string, timeoutSeconds int, heartbeatSeconds int, weight string, channel string, lb LB) {
-
-	if !goframeworkredis.HasRedisInstance(name) {
-		logger.Fatalf("To start the redis registry, you must running the instance '%s' for redis.", name)
+func loadLb(name string, options *StarterOptions) LB {
+	if options.Lb == "" {
+		return nil
 	}
 
-	if timeoutSeconds <= 0 {
-		timeoutSeconds = 30
+	if options.NodeId == "" {
+		logger.Fatalf("[%s] to enable load balancing, you must configure the parameter \"node_id\"", name)
 	}
 
-	if heartbeatSeconds <= 0 {
-		heartbeatSeconds = 300
+	if options.Lb == "redis" {
+		lbNodeWithRedis := NewLBNodeWithRedis(options.NodeId, options.HashringSpots)
+		StartRedisRegistry(options, lbNodeWithRedis)
+		return lbNodeWithRedis
 	}
 
-	if prefix == "" {
+	return nil
+}
+
+func StartRedisRegistry(options *StarterOptions, lb LB) {
+
+	if !goframeworkredis.HasRedisInstance(options.LbRedis) {
+		logger.Fatalf("To start the redis registry, you must running the instance '%s' for redis.", options.LbRedis)
+	}
+
+	if options.LbRedisPrefix == "" {
 		logger.Fatal("To start the redis registry, you must configure the parameter 'lb_redis_prefix'.")
 	}
 
-	if channel == "" {
+	if options.LbRedisChannel == "" {
 		logger.Fatal("To start the redis registry, you must configure the parameter 'lb_redis_channel'.")
 	}
 
-	redisClient := goframeworkredis.GetRedisClient(name)
+	redisClient := goframeworkredis.GetRedisClient(options.LbRedis)
 	var redisnoderegistry registry.Registry = registry_goredis.NewRedisNodeRegistry(redisClient, &registry_goredis.RedisNodeRegistryOptions{
-		Prefix:  prefix,
-		Node:    nodeStr,
-		Timeout: time.Second * time.Duration(timeoutSeconds),
-		Channel: channel,
-		Weight:  weight,
+		Prefix:  options.LbRedisPrefix,
+		Node:    options.NodeId,
+		Timeout: time.Second * time.Duration(options.LbRedisTimeout),
+		Channel: options.LbRedisChannel,
+		Weight:  options.LbRedisWeight,
 		Reload: func(value []string, channel string) {
 			lb.Load(value)
 		},
-		Heartbeat: time.Second * time.Duration(heartbeatSeconds),
+		Heartbeat: time.Second * time.Duration(options.LbRedisHeartbeat),
 	})
 	redisnoderegistry.Listener()
 	_ = redisnoderegistry.Register()

@@ -10,9 +10,10 @@ var handle = cron_starter.NewCronModule("AA", nil, map[string]interface{}{})
 
 var cfg = map[string]interface{}{
 	"AAA": map[string]interface{}{
-		"id":          "xxx",
-		"remote":      "worker",
-		"remote_host": "https://www.baidu.com",
+		"node_id":           "xxx",
+		"node_type":         "worker",
+		"remote":            "worker",
+		"worker_feign_host": "https://www.baidu.com",
 	},
 	"BBB": map[string]interface{}{
 		"id":          "BBB",
