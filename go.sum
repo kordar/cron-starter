@@ -9,11 +9,12 @@ github.com/go-resty/resty/v2 v2.16.2 h1:CpRqTjIzq/rweXUt9+GxzzQdlkqMdt8Lm/fuK/CA
 github.com/go-resty/resty/v2 v2.16.2/go.mod h1:0fHAoK7JoBy/Ch36N8VFeMsK7xQOHhvWaC3iOktwmIU=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
-github.com/kordar/gocron v0.0.4 h1:RWJw9P45kYXndu1kK0HhY4vkJdqmz/5riqIR9UmanLg=
-github.com/kordar/gocron v0.0.4/go.mod h1:kQP6pbyw+zb3HetZ5QrZ+YjPBHQkwxd0ruOD6EJ1cRI=
+github.com/kordar/gocron v0.0.6 h1:b+anAYPcLsNB6BmSdsRwfTCqUreRehFyE2MC3IwBwUY=
 github.com/kordar/gocron v0.0.6/go.mod h1:kQP6pbyw+zb3HetZ5QrZ+YjPBHQkwxd0ruOD6EJ1cRI=
 github.com/kordar/godb v0.0.7 h1:y6N9BHaTKXLJUw0lLSor2wIbRSE8c/GWz2jLAnMv1Rs=
 github.com/kordar/godb v0.0.7/go.mod h1:9is7dBbUuRnXJ0vK80eqGPtjhJ+OwiHbdaGnCUaVQkg=
+github.com/kordar/goframework-cron v0.0.2 h1:CwTxxuMvhfyJu8Q5FSSpJcak9fgvv1/bbu0UrzwVQ+M=
+github.com/kordar/goframework-cron v0.0.2/go.mod h1:IBAJf5W3dfVyc5ZhZx6N9FTs2ya8qHRtHKvgV3F2t7M=
 github.com/kordar/goframework-goredis v0.0.1 h1:y5N5zMKZi/PwNSPpp+qO7yRDHffEHu3xxsWrSe2TnM0=
 github.com/kordar/goframework-goredis v0.0.1/go.mod h1:+oExHma1RlIxXH6oheDQm96zrkDn8WCiCU7P/nWOWag=
 github.com/kordar/goframework-resty v0.0.1 h1:Y86wJDOANyF5LoxvdAVCsQEyaq+6Re2Va2LT7ZyzfDw=

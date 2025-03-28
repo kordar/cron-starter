@@ -7,9 +7,6 @@ import (
 	"github.com/spf13/cast"
 )
 
-type InitializeFunction func(job gocron.Schedule) map[string]string
-type RuntimeFunction func(job gocron.Schedule) bool
-
 type CronModule struct {
 	name string
 	args map[string]interface{}
@@ -24,10 +21,11 @@ func (m CronModule) Name() string {
 	return m.name
 }
 
-func (m CronModule) runFn() (InitializeFunction, RuntimeFunction) {
-	var initializeFn InitializeFunction
+func (m CronModule) runFn() (gocron.InitializeFunction, gocron.RuntimeFunction) {
+	var initializeFn gocron.InitializeFunction
 	if m.args != nil && m.args["cfgFn"] != nil {
-		initializeFn = m.args["cfgFn"].(InitializeFunction)
+		initializeFn = m.args["cfgFn"].(gocron.InitializeFunction)
+
 	} else {
 		initializeFn = func(job gocron.Schedule) map[string]string {
 			return map[string]string{
@@ -36,9 +34,9 @@ func (m CronModule) runFn() (InitializeFunction, RuntimeFunction) {
 		}
 	}
 
-	var runtimeFn RuntimeFunction
+	var runtimeFn gocron.RuntimeFunction
 	if m.args != nil && m.args["validateFn"] != nil {
-		runtimeFn = m.args["validateFn"].(RuntimeFunction)
+		runtimeFn = m.args["validateFn"].(gocron.RuntimeFunction)
 	} else {
 		runtimeFn = func(job gocron.Schedule) bool {
 			return true

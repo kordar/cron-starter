@@ -71,5 +71,4 @@ func (options *StarterOptions) LoadConfig(cfg map[string]string) {
 	options.WorkerFeignHost = cfg["worker_feign_host"]
 	options.WorkerFeignTimeout = cast.ToInt(cfg["worker_feign_timeout"])
 	options.WorkerFeignRetryCount = cast.ToInt(cfg["worker_feign_retry_count"])
-
 }

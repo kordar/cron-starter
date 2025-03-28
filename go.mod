@@ -2,12 +2,10 @@ module github.com/kordar/cron-starter
 
 go 1.18
 
-replace github.com/kordar/goframework-cron => ../../goframework-cron
-
 require (
 	github.com/go-resty/resty/v2 v2.16.2
 	github.com/kordar/gocron v0.0.6
-	github.com/kordar/goframework-cron v0.0.0-00010101000000-000000000000
+	github.com/kordar/goframework-cron v0.0.2
 	github.com/kordar/goframework-goredis v0.0.1
 	github.com/kordar/goframework-resty v0.0.1
 	github.com/kordar/gologger v0.0.8

@@ -17,6 +17,7 @@ func loadWorker(name string, options *StarterOptions) {
 	}
 
 	feign := getFeign(name, options)
+	logger.Infof("===============%s", options.Id)
 	goframeworkcron.AddJob(options.Id, NewWorkerHeartSchedule(feign, options))
 	//goframeworkcron.AddJob(id, NewWorkerHeartSchedule(id, cfg["remote_worker_heart_spec"]))
 
