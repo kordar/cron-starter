@@ -1,12 +1,13 @@
 package cron_starter_test
 
 import (
+	"testing"
+	"time"
+
 	cron_starter "github.com/kordar/cron-starter"
 	"github.com/kordar/gocron"
 	goframeworkcron "github.com/kordar/goframework-cron"
 	logger "github.com/kordar/gologger"
-	"testing"
-	"time"
 )
 
 var initializeFn gocron.InitializeFunction = func(job gocron.Schedule) map[string]string {
@@ -61,7 +62,13 @@ func TestNewCronModule(t *testing.T) {
 		"spec": "@every 5s",
 	})
 
-	goframeworkcron.AddJob("BBB", s)
+	// goframeworkcron.AddJob("BBB", s)
+	a := goframeworkcron.GetCronClient("BBB")
+	a.Add(s)
+	defer func() {
+		// goframeworkcron.RemoveAllJob("BBB")
+		// goframeworkcron.Stop("BBB")
+	}()
 
-	time.Sleep(100 * time.Second)
+	time.Sleep(10 * time.Second)
 }

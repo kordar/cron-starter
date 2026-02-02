@@ -1,13 +1,14 @@
 package cron_starter
 
 import (
+	"time"
+
 	"github.com/go-resty/resty/v2"
 	goframeworkcron "github.com/kordar/goframework-cron"
 	goframeworkresty "github.com/kordar/goframework-resty"
 	logger "github.com/kordar/gologger"
 	"github.com/kordar/goresty"
 	"github.com/spf13/cast"
-	"time"
 )
 
 func loadWorker(name string, options *StarterOptions) {
@@ -17,7 +18,7 @@ func loadWorker(name string, options *StarterOptions) {
 	}
 
 	feign := getFeign(name, options)
-	logger.Infof("===============%s", options.Id)
+	// logger.Infof("===============%s", options.Id)
 	goframeworkcron.AddJob(options.Id, NewWorkerHeartSchedule(feign, options))
 	//goframeworkcron.AddJob(id, NewWorkerHeartSchedule(id, cfg["remote_worker_heart_spec"]))
 
