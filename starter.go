@@ -1,9 +1,10 @@
 package cron_starter
 
 import (
+	"log/slog"
+
 	"github.com/kordar/gocron"
 	goframeworkcron "github.com/kordar/goframework-cron"
-	logger "github.com/kordar/gologger"
 	"github.com/spf13/cast"
 )
 
@@ -49,36 +50,27 @@ func (m CronModule) runFn() (gocron.InitializeFunction, gocron.RuntimeFunction) 
 func (m CronModule) _load(id string, cfg map[string]string) {
 
 	if id == "" {
-		logger.Fatalf("[%s] the attribute id cannot be empty.", m.Name())
+		slog.Error("the attribute id cannot be empty", "module", m.Name())
 		return
 	}
-
-	starterOptions := NewStarterOptions(id, cfg)
-	lb := loadLb(m.Name(), starterOptions)
 
 	fn1, fn2 := m.runFn()
 	err := goframeworkcron.AddGocronInstance(id, func(job gocron.Schedule) map[string]string {
 		return fn1(job)
 	}, func(job gocron.Schedule) bool {
-		if lb != nil {
-			return lb.Can(job.GetId())
-		}
 		return fn2(job)
 	})
 
-	// 配置节点类型为work时，生成rest请求对象，并插入提交定时任务进行心跳维护。
-	loadWorker(m.Name(), starterOptions)
-
 	if err != nil {
-		logger.Fatalf("[%s] failed to initialize gocron instance.", m.Name())
+		slog.Error("failed to initialize gocron instance", "module", m.Name())
 	}
 
 	if m.load != nil {
 		m.load(m.name, id, cfg)
-		logger.Debugf("[%s] triggering custom loader completion", m.Name())
+		slog.Debug("triggering custom loader completion", "module", m.Name())
 	}
 
-	logger.Infof("[%s] loading module '%s' successfully", m.Name(), id)
+	slog.Info("loading module successfully", "module", m.Name(), "id", id)
 }
 
 func (m CronModule) Load(value interface{}) {

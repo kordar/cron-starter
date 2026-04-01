@@ -3,17 +3,17 @@ package cron_starter_test
 import (
 	"testing"
 	"time"
+	"log/slog"
 
 	cron_starter "github.com/kordar/cron-starter"
 	"github.com/kordar/gocron"
 	goframeworkcron "github.com/kordar/goframework-cron"
-	logger "github.com/kordar/gologger"
 )
 
 var initializeFn gocron.InitializeFunction = func(job gocron.Schedule) map[string]string {
 	cfg := map[string]string{}
 	cfg["spec"] = "@every 10s"
-	logger.Info("xxxxxxxxxxx", job.GetId())
+	slog.Info("xxxxxxxxxxx", "id", job.GetId())
 	if job.GetId() == "AAA" {
 		cfg["spec"] = "@every 5s"
 	}
@@ -50,7 +50,7 @@ func (s TestNameSchedule) GetSpec() string {
 
 func (s TestNameSchedule) Execute() {
 	config := s.Config()
-	logger.Infof("--------------test name--------------%v", config)
+	slog.Info("--------------test name--------------", "config", config)
 }
 
 func TestNewCronModule(t *testing.T) {

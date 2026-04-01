@@ -1,6 +1,6 @@
 # cron-starter 使用文档
 
-一个 Go 语言的 cron 任务启动器，基于 **gocron** 和 **goframework-cron**，支持动态配置、分布式 worker、日志输出。
+一个 Go 语言的 cron 任务启动器，基于 **gocron** 和 **goframework-cron**，支持动态配置与结构化日志输出（slog）。
 
 下面通过 `starter_test.go` 测试示例说明如何使用。
 
@@ -27,29 +27,29 @@ var handle = cron_starter.NewCronModule("AA", nil, map[string]interface{}{})
 ```
 var cfg = map[string]interface{}{
     "AAA": map[string]interface{}{
-        "node_id":           "xxx",
-        "node_type":         "worker",
-        "remote":            "worker",
-        "worker_feign_host": "https://www.baidu.com",
+        "id":   "AAA",
+        "spec": "@every 5s",
     },
     "BBB": map[string]interface{}{
-        "id":          "BBB",
-        "remote":      "worker",
-        "remote_host": "https://www.sina.com",
+        "id":   "BBB",
+        "spec": "@every 10s",
     },
 }
 ```
 
 - 每个任务 ID 对应一个 map 配置
-- 可以自定义 `node_id`、`remote_host` 等属性
-- 配置会被加载到对应的 cron 任务中
+- 可为不同任务自定义 `spec` 等属性
+- 配置会被加载到对应的 cron 任务中，用于初始化任务参数
 
 ------
 
 ## 3️⃣ 创建自定义任务
 
 ```
-import "github.com/kordar/gocron"
+import (
+    "github.com/kordar/gocron"
+    "log/slog"
+)
 
 type TestNameSchedule struct {
     gocron.BaseSchedule
@@ -65,7 +65,7 @@ func (s TestNameSchedule) GetSpec() string {
 
 func (s TestNameSchedule) Execute() {
     config := s.Config()
-    logger.Infof("--------------test name--------------%v", config)
+    slog.Info("--------------test name--------------", "config", config)
 }
 ```
 
@@ -124,7 +124,7 @@ time.Sleep(100 * time.Second)
 ```
 
 - 测试中用 `Sleep` 模拟任务运行
-- 在实际应用中，可以直接调用模块的启动方法或将调度器放到后台服务中运行
+- 在实际应用中，可将调度器放到后台服务中运行
 
 ------
 
@@ -136,7 +136,7 @@ time.Sleep(100 * time.Second)
 var initializeFn gocron.InitializeFunction = func(job gocron.Schedule) map[string]string {
     cfg := map[string]string{}
     cfg["spec"] = "@every 10s"
-    logger.Info("Job initialized:", job.GetId())
+    slog.Info("Job initialized", "id", job.GetId())
     if job.GetId() == "AAA" {
         cfg["spec"] = "@every 5s"
     }
@@ -145,7 +145,7 @@ var initializeFn gocron.InitializeFunction = func(job gocron.Schedule) map[strin
 ```
 
 - 可以根据任务 ID 动态生成 cron 表达式
-- 可用于分布式环境中不同节点的任务调度
+- 可用于在运行前动态计算任务配置
 
 ------
 
@@ -164,6 +164,5 @@ var initializeFn gocron.InitializeFunction = func(job gocron.Schedule) map[strin
 ### 特点
 
 - 支持动态 cron 配置
-- 支持分布式 worker
-- 支持日志打印与调试
+- 使用标准库 slog 进行结构化日志
 - 可快速扩展新任务
