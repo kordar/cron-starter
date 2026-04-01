@@ -1,9 +1,9 @@
 package cron_starter_test
 
 import (
+	"log/slog"
 	"testing"
 	"time"
-	"log/slog"
 
 	cron_starter "github.com/kordar/cron-starter"
 	"github.com/kordar/gocron"

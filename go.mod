@@ -1,11 +1,11 @@
 module github.com/kordar/cron-starter
 
-go 1.21
+go 1.21.0
 
 require (
 	github.com/kordar/gocron v1.1.1
 	github.com/kordar/goframework-cron v1.1.2
-	github.com/spf13/cast v1.7.1
+	github.com/spf13/cast v1.10.0
 )
 
 require (
